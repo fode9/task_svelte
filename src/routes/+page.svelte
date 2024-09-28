@@ -2,7 +2,7 @@
 	import { page } from "$app/stores";
 import Layout from "./+layout.svelte";
 	import Modify from "./components/modify.svelte";
-    import {Tasks} from './store'
+    import {Tasks, pageInfo} from './store'
     import { fade, slide, fly, scale, blur, draw, crossfade } from 'svelte/transition';
 
 
@@ -14,11 +14,6 @@ const taskModel = {
     created: '',
     notify: false
 
-}
-
-$: pageInfo = {
-    detail: 0,
-    page : 'viewPage' 
 }
 
 function getRandomInt(min, max) {
@@ -56,7 +51,7 @@ const deleteTask = (task) => {
 
 </script>
 
-{#if pageInfo.page === 'viewPage'}
+{#if $pageInfo.page === 'viewPage'}
 
     <div class="col-12 d-flex flex-column container">
         <div class="row align-items-center d-flex justify-content-center">
@@ -78,7 +73,7 @@ const deleteTask = (task) => {
                         <div class="text-primary h4 task-top d-flex justify-content-between px-2">
                             <!-- svelte-ignore a11y-no-static-element-interactions -->
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
-                            <i on:click|preventDefault={() => {pageInfo.page = 'modifyPage'; pageInfo.detail = $Tasks.indexOf(task) }} class="fa fa-gear close-task clickable"></i>
+                            <i on:click|preventDefault={() => {$pageInfo.page = 'modifyPage'; $pageInfo.detail = $Tasks.indexOf(task) }} class="fa fa-gear close-task clickable"></i>
                             <i on:click|preventDefault={deleteTask(task)}  class="fa fa-close set-task clickable"></i>
                         </div>
                         <div class="task-date text-center p-4">
@@ -99,8 +94,8 @@ const deleteTask = (task) => {
         <div class="row"></div>
     </div>
 
-{:else if pageInfo.page === 'modifyPage'}
-    <Modify taskId = {pageInfo.detail} on:backdropClicked={(e) => {pageInfo.page = e.detail}}></Modify>
+{:else if $pageInfo.page === 'modifyPage'}
+    <Modify taskId = {$pageInfo.detail} on:backdropClicked={(e) => {$pageInfo.page = e.detail}}></Modify>
 {:else }
     <p>Not a Page</p>
 
