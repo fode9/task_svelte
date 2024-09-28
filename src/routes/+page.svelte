@@ -3,47 +3,10 @@
 import Layout from "./+layout.svelte";
 	import Modify from "./components/modify.svelte";
     import {Tasks, pageInfo} from './store'
+    import {addTask} from './store'
     import { fade, slide, fly, scale, blur, draw, crossfade } from 'svelte/transition';
 
 
-const taskModel = {
-    id: 0,
-    day: 'Day',
-    date: "2024-09-26",
-    name: 'Today',
-    created: '',
-    notify: false
-
-}
-
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const days = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']
-function getRandomItem(array) {
-    return array[Math.floor(Math.random() * array.length)];
-}
-
-
-const assignId = () => {
-    let ids = []
-    for (let i =0; i<$Tasks.length; i++){
-        ids.push($Tasks[i].id)
-    }
-    let genId = getRandomInt(0,999)
-    while (ids.includes(genId)){
-        genId = getRandomInt(0,999)
-    }
-    return genId
-}
-
-const addTask = () => {
-    let newTask = {...taskModel}
-    $Tasks = [newTask,...$Tasks]
-    $Tasks[0].id = assignId()
-    return newTask
-    }
     
 const deleteTask = (task) => {
     $Tasks = $Tasks.filter(item => item !== task)
@@ -95,7 +58,7 @@ const deleteTask = (task) => {
     </div>
 
 {:else if $pageInfo.page === 'modifyPage'}
-    <Modify taskId = {$pageInfo.detail} on:backdropClicked={(e) => {$pageInfo.page = e.detail}}></Modify>
+    <Modify taskId = {$pageInfo.detail} on:backdropClicked={(e) => {$pageInfo.page = e.detail;}}></Modify>
 {:else }
     <p>Not a Page</p>
 
