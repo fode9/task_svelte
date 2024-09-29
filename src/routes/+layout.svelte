@@ -1,5 +1,6 @@
 <script>
 	import { pageInfo, Tasks, addTask } from './store.js';
+    import Notification from './components/notification.svelte';
 
     function handleAdd(){
         //Add a new task
@@ -21,6 +22,7 @@
             </div>
         </div>
     </nav>
+    <Notification/>
     <main class="container">
         <slot/>
     </main>

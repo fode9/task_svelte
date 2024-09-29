@@ -1,14 +1,23 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-import Layout from "./+layout.svelte";
+	import { onMount } from "svelte";
+    import Layout from "./+layout.svelte";
 	import Modify from "./components/modify.svelte";
-    import {Tasks, pageInfo} from './store'
+    import {Tasks, pageInfo, requestNotificationPermission} from './store'
     import {addTask} from './store'
     import { fade, slide, fly, scale, blur, draw, crossfade } from 'svelte/transition';
 
-
+    onMount(() => {
+        requestNotificationPermission()
+        window.focus()
+        new Notification("Hello!", {
+                    body: "Task has met its deadline",
+                    icon: "/logo.svg" // Optional: add an icon
+                  })
+    })
     
-const deleteTask = (task) => {
+
+    const deleteTask = (task) => {
     $Tasks = $Tasks.filter(item => item !== task)
 }
 
@@ -48,7 +57,7 @@ const deleteTask = (task) => {
                                 <i class="fa fa-maximize my-auto"></i>
                                 <p class="date-describe fw-bold m-0">{task.name}</p>
                             </div>
-                            <i on:click={() => task.notify = !task.notify} class={task.notify ? 'fas fa-bell fa-shake clickable text-primary' : 'fa fa-bell clickable'}></i>
+                            <i on:click={() => task.notify = !task.notify} class={task.notify ? 'fas fa-bell fa-shake clickable text-primary' : 'fa fa-bell clickable'} id ='notif-icon'></i>
                         </div>
                     </div>
                 {/each}

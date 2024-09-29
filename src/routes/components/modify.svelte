@@ -52,16 +52,16 @@ function handleClickBackdrop(){
                 </div>
                 <div class="p-2 d-flex flex-row justify-content-between mt-4">
                     <h3 class="h3 fw-bold text-primary">{dayOfWeek}</h3>
-                    <i class="h3 fa fa-bell text-primary"></i>
+                    <i id="notif-icon" on:click={() => task.notify = !task.notify} class={task.notify ?  'h3 fas fa-bell fa-shake clickable text-primary' : 'h3 fa fa-bell clickable'}></i>
                 </div>
                 <div class="p-2 d-flex flex-row justify-content-between gap-5">
                     <textarea name="note" id="note" class="form control w-75 p-2" rows="6" bind:value={task.note}></textarea>
                 </div>
                 <div class="p-2">
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p on:click|preventDefault={handleSubmit} class="btn rounded-pill bg-primary text-white">Modify</p>
+                    <p on:click|preventDefault={handleSubmit} class="btn rounded-pill bg-primary text-white">Done</p>
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <p on:click={handleClickBackdrop} class="btn rounded-pill bg-primary text-white">Cancel</p>
+                    <p on:click|preventDefault={handleClickBackdrop} class="btn rounded-pill bg-primary text-white">Cancel</p>
                 </div>
             </form>
         </div>
@@ -86,5 +86,3 @@ function handleClickBackdrop(){
         z-index: 9999;
     }
   </style>
-
-  <Scripts></Scripts>

@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import { NotificationDisplay, notifier } from '@beyonk/svelte-notifications'
 
 
 export const Tasks = writable([
@@ -8,13 +9,77 @@ export const pageInfo = writable({
     page : 'viewPage' 
 })
 
+let permissionGranted = false
+
+// Function to request permission for notifications
+export function requestNotificationPermission() {
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        permissionGranted = true;
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            permissionGranted = true;
+          }
+        });
+      }
+    }
+  }
+
 const taskModel = {
     id: 0,
     day: 'Day',
     date: "2024-09-26",
     name: 'Today',
-    created: '',
+    created: new Date().toISOString(),
     notify: false
+
+}
+
+export let notifications = []
+
+export let notificationsMsg = writable([])
+
+function checkAndNotify(task){
+    let deadlineMet = false
+    let notification;
+    if (!deadlineMet){
+        let nlist =[]
+        notificationsMsg.subscribe(value => {nlist = value} )
+        if (!nlist.includes(task)){
+            if (new Date().toISOString().slice(0,10) === task.date){
+                deadlineMet = true
+                notification = {
+
+                }
+                {notificationsMsg.update((arr) => [...arr, task])}
+                console.log('logically Notifiied')
+            }
+        }
+    }
+
+    return {
+        'task' : task,
+        'fullfilled' : new Date().toISOString()
+    }
+
+}
+
+async function NotificationHandler(task) {
+    console.log('Notification Hnadle')
+    let interval = setInterval(() => {
+        if (notifications.includes(task) && !task.notify){
+            notifications.filter(item => item !== task)
+            clearInterval(interval)
+        }
+        let nlist =[]
+        notificationsMsg.subscribe(value => {nlist = value} )
+        if (!notifications.includes(task) && task.notify && !nlist.includes(task) ){
+            notifications = [...notifications, {task}]
+            let check = checkAndNotify(task)
+        }
+    }, 10000);
+    
 
 }
 
@@ -46,7 +111,7 @@ const assignId = () => {
 export const addTask = () => {
     let newTask = {...taskModel, id:assignId()}
     Tasks.update(arr => [newTask, ...arr]);
-    Tasks.subscribe((value) => {console.log(value.indexOf(newTask))})
+    let n = NotificationHandler(newTask)
     return newTask
     }
 
