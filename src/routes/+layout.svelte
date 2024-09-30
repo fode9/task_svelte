@@ -1,5 +1,5 @@
 <script>
-	import { pageInfo, Tasks, addTask } from './store.js';
+	import { pageInfo, Tasks, addTask, notificationsMsg} from './store.js';
     import Notification from './components/notification.svelte';
 
     function handleAdd(){
@@ -22,7 +22,9 @@
             </div>
         </div>
     </nav>
-    <Notification/>
+    {#if $notificationsMsg.length > 0}
+        <Notification/>
+    {/if}
     <main class="container">
         <slot/>
     </main>

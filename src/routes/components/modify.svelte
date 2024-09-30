@@ -52,7 +52,7 @@ function handleClickBackdrop(){
                 </div>
                 <div class="p-2 d-flex flex-row justify-content-between mt-4">
                     <h3 class="h3 fw-bold text-primary">{dayOfWeek}</h3>
-                    <i id="notif-icon" on:click={() => task.notify = !task.notify} class={task.notify ?  'h3 fas fa-bell fa-shake clickable text-primary' : 'h3 fa fa-bell clickable'}></i>
+                    <i id={String(task.id)} on:click={() => task.notify = !task.notify} class={task.notify ?  'h3 fas fa-bell fa-shake clickable text-primary' : 'h3 fa fa-bell clickable'}></i>
                 </div>
                 <div class="p-2 d-flex flex-row justify-content-between gap-5">
                     <textarea name="note" id="note" class="form control w-75 p-2" rows="6" bind:value={task.note}></textarea>

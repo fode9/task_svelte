@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount, onDestroy} from 'svelte';
 	import { notifications, notificationsMsg } from './../store.js';
     import { fade, slide, fly, scale, blur, draw, crossfade } from 'svelte/transition';
 
@@ -6,10 +7,30 @@
         console.log($notificationsMsg)
         $notificationsMsg = $notificationsMsg.filter(item => item!==task)
     }
+    let useCase;
+
+    onMount(() => {
+        const audio = new Audio('/sounds/beep.wav')
+        audio.volume = 1
+        audio.muted = false
+        audio.loop =true
+        audio.play()
+        useCase = returnAudio(audio)
+        console.log('audio now playing')
+    })
+
+    function returnAudio(audio){
+        return audio
+    }
+
+    onDestroy(() => {
+        useCase.pause()
+    })
+
 
     function handleTaskCompleted(task){
         task.notify = false
-        const icon = document.getElementById('notif-icon')
+        const icon = document.getElementById(String(task.id))
         if (icon?.classList.contains('fa-shake')){
             icon.classList.remove('fa-shake')
             icon.classList.replace('text-primary','text-dark')
@@ -18,7 +39,7 @@
 }
 </script>
 {#if $notificationsMsg.length > 0}
-    <div class="container position-fixed fixed-top-0 w-50">
+    <div class="container position-fixed fixed-top-0 col-sm-12 col-lg-6 d-flex flex-column gap-4">
         {#each $notificationsMsg as task (task.id)}
             <div transition:scale class="card notification-box rounded shadow bg-white d-flex flex-column gap-3 text-white p-4">
                 <i class="h1 fas fa-bell fa-shake text-primary mx-auto"></i>

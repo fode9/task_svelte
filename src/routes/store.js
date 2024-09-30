@@ -9,6 +9,24 @@ export const pageInfo = writable({
     page : 'viewPage' 
 })
 
+
+
+
+export async function getTask(){
+    let url = 'http://127.0.0.1:8000/get_task_by_user/'+23
+    let response = await fetch(url)
+
+    if (!response.ok){
+        console.log("There was a network problem")
+        return []
+    }else{
+        for (let task of await response.json()){
+            Tasks.update(arr => [task, ...arr])
+            let nt = NotificationHandler(task)
+        }
+    }
+}
+
 let permissionGranted = false
 
 // Function to request permission for notifications

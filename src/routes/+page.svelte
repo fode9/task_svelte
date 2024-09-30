@@ -3,11 +3,12 @@
 	import { onMount } from "svelte";
     import Layout from "./+layout.svelte";
 	import Modify from "./components/modify.svelte";
-    import {Tasks, pageInfo, requestNotificationPermission} from './store'
+    import {Tasks, pageInfo, requestNotificationPermission, getTask} from './store'
     import {addTask} from './store'
     import { fade, slide, fly, scale, blur, draw, crossfade } from 'svelte/transition';
 
     onMount(() => {
+        getTask()
         requestNotificationPermission()
         window.focus()
         new Notification("Hello!", {
@@ -57,7 +58,7 @@
                                 <i class="fa fa-maximize my-auto"></i>
                                 <p class="date-describe fw-bold m-0">{task.name}</p>
                             </div>
-                            <i on:click={() => task.notify = !task.notify} class={task.notify ? 'fas fa-bell fa-shake clickable text-primary' : 'fa fa-bell clickable'} id ='notif-icon'></i>
+                            <i on:click={() => task.notify = !task.notify} class={task.notify ? 'fas fa-bell fa-shake clickable text-primary' : 'fa fa-bell clickable'} id ={String(task.id)}></i>
                         </div>
                     </div>
                 {/each}
