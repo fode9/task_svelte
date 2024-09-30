@@ -58,6 +58,17 @@ export let notifications = []
 
 export let notificationsMsg = writable([])
 
+function convertToTimeZone(date, timeZoneOffsetMinutes) {
+    date = new Date(date)
+    // Get the UTC time by adjusting with the local timezone offset
+    const utcTime = date.getTime() + date.getTimezoneOffset() * 60000;
+  
+    // Adjust the time with the desired timezone offset (in minutes)
+    const targetTime = new Date(utcTime + timeZoneOffsetMinutes * 60000);
+  
+    return targetTime;
+  }
+
 function checkAndNotify(task){
     let deadlineMet = false
     let notification;
@@ -65,7 +76,8 @@ function checkAndNotify(task){
         let nlist =[]
         notificationsMsg.subscribe(value => {nlist = value} )
         if (!nlist.includes(task)){
-            if (new Date().toISOString().slice(0,16) === task.date){
+            console.log(`${new Date().toISOString().slice(0,16)} : ${convertToTimeZone(task.date, 60).toISOString().slice(0,16)}`)
+            if (new Date().toISOString().slice(0,16) === convertToTimeZone(task.date, 60).toISOString().slice(0,16)){
                 deadlineMet = true
                 notification = {
 

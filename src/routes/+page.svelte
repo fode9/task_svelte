@@ -29,7 +29,7 @@
     <div class="col-12 d-flex flex-column container">
         <div class="row align-items-center d-flex justify-content-center">
             <div class="mx-auto p-5 logo d-flex flex-column justify-content-center align-items-center">
-                <img src="/logo.svg" alt="" class="mx-auto" style="width: 200px;">
+                <img src="/logo.png" alt="" class="mx-auto" style="width: 200px;">
             </div>
         </div>
         <div class="row task-row d-flex flex-column">

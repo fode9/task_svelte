@@ -34,6 +34,9 @@
         if (icon?.classList.contains('fa-shake')){
             icon.classList.remove('fa-shake')
             icon.classList.replace('text-primary','text-dark')
+        }else if (task.notify !== false){
+            icon?.classList.add('fa-shake')
+            icon?.classList.replace('text-dark', 'text-primary')
         }
         $notificationsMsg = $notificationsMsg.filter(item => item!==task)
 }
