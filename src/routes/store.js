@@ -65,7 +65,7 @@ function checkAndNotify(task){
         let nlist =[]
         notificationsMsg.subscribe(value => {nlist = value} )
         if (!nlist.includes(task)){
-            if (new Date().toISOString().slice(0,10) === task.date){
+            if (new Date().toISOString().slice(0,16) === task.date){
                 deadlineMet = true
                 notification = {
 

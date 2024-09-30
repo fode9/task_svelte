@@ -48,7 +48,7 @@ function handleClickBackdrop(){
             <form class="main-mod-frame p-4 my-auto shadow">
                 <div class="p-2 d-flex flex-row justify-content-between gap-5">
                     <input type="text" bind:value={task.name} class="form-control" placeholder={task.name}>
-                    <input type="date" on:change={getDayFromDate} placeholder={task.date} class="form-control" bind:value={task.date}>
+                    <input type="datetime-local" on:change={getDayFromDate} placeholder={task.date} class="form-control" bind:value={task.date}>
                 </div>
                 <div class="p-2 d-flex flex-row justify-content-between mt-4">
                     <h3 class="h3 fw-bold text-primary">{dayOfWeek}</h3>
