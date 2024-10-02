@@ -4,10 +4,11 @@
     import {createEventDispatcher, onMount} from 'svelte'
     import { addTask, Tasks, userId } from '../store';
     export let taskId = 0
-
-    let url = 'http://127.0.0.1:8000/task_manager'
+    console.log('addPage')
 
     let task = $Tasks[taskId]
+    let url = 'http://127.0.0.1:8000/task_manager'
+    console.log(task)
     $: className = ''
 
 
@@ -25,6 +26,7 @@
     // Function to get the day from the selected date
     function getDayFromDate() {
         if (task.date) {
+            console.log(task.date)
             const selectedDate = new Date(task.date);
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
             dayOfWeek = days[selectedDate.getDay()]; // Get the day index and map it to the name of the day
@@ -90,7 +92,7 @@
             <form class="main-mod-frame p-4 my-auto shadow">
                 <div class="p-2 d-flex flex-row justify-content-between gap-5">
                     <input type="text" bind:value={task.name} class="form-control" placeholder={task.name}>
-                    <input type="datetime-local" on:change={getDayFromDate} placeholder={task.date} class="form-control" bind:value={task.date}>
+                    <input type="datetime-local" on:change|preventDefault={getDayFromDate} placeholder={task.date} class="form-control" bind:value={task.date}>
                 </div>
                 <div class="p-2 d-flex flex-row justify-content-between mt-4">
                     <h3 class="h3 fw-bold text-primary">{dayOfWeek}</h3>

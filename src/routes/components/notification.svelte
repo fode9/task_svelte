@@ -31,12 +31,10 @@
     function handleTaskCompleted(task){
         task.notify = false
         const icon = document.getElementById(String(task.id))
-        if (icon?.classList.contains('fa-shake')){
-            icon.classList.remove('fa-shake')
-            icon.classList.replace('text-primary','text-dark')
+        if (task.notify === false){
+            icon.className = 'fa fa-bell text-dark h4'
         }else if (task.notify !== false){
-            icon?.classList.add('fa-shake')
-            icon?.classList.replace('text-dark', 'text-primary')
+            icon.className = 'fa fa-bell fa-shake text-primary h4'
         }
         $notificationsMsg = $notificationsMsg.filter(item => item!==task)
 }
@@ -44,13 +42,16 @@
 {#if $notificationsMsg.length > 0}
     <div class="container position-fixed fixed-top-0 col-sm-12 col-lg-6 d-flex flex-column gap-4">
         {#each $notificationsMsg as task (task.id)}
-            <div transition:scale class="card notification-box rounded shadow bg-white d-flex flex-column gap-3 text-white p-4">
+            <div transition:scale class="card notification-box rounded shadow bg-dark d-flex flex-column gap-3 text-white p-4">
                 <i class="h1 fas fa-bell fa-shake text-primary mx-auto"></i>
                 <div class="notif-body">
-                    <div class="task-name text-dark h2 text-center fw-bold">{task.name}</div>
-                    <div class="day-date d-flex flex-row justify-content-between h3">
-                        <p>{task.day}</p>
-                        <p>{task.date}</p>
+                    <div class="task-name text-white-50 h2 text-center fw-bold">{task.name}</div>
+                    <div class="day-date d-flex flex-row justify-content-between h5 text-white-50">
+                        <p class="text-primary fw-bold">{task.day}</p>
+                        <p>{task.date.slice(0,10)}</p>
+                    </div>
+                    <div class="note text-white-50 p-2">
+                        {task.note}
                     </div>
                 </div>
                 <div class="btns d-flex flex-row justify-content-between align-items-center gap-5">

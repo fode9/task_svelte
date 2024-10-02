@@ -1,5 +1,4 @@
-import { writable } from "svelte/store";
-import { NotificationDisplay, notifier } from '@beyonk/svelte-notifications'
+import { writable } from "svelte/store"
 
 
 export const Tasks = writable([
@@ -10,22 +9,6 @@ export const pageInfo = writable({
 })
 
 
-
-
-export async function getTask(){
-    let url = 'http://127.0.0.1:8000/get_task_by_user/'+23
-    let response = await fetch(url)
-
-    if (!response.ok){
-        console.log("There was a network problem")
-        return []
-    }else{
-        for (let task of await response.json()){
-            Tasks.update(arr => [task, ...arr])
-            let nt = NotificationHandler(task)
-        }
-    }
-}
 
 let permissionGranted = false
 
@@ -50,11 +33,14 @@ const taskModel = {
     date: "2024-09-26",
     name: 'Today',
     created: new Date().toISOString(),
+    note: '',
     notify: false
 
 }
 
 export let notifications = []
+
+export let userId = writable(23)
 
 export let notificationsMsg = writable([])
 
@@ -68,6 +54,46 @@ function convertToTimeZone(date, timeZoneOffsetMinutes) {
   
     return targetTime;
   }
+
+
+export async function getTasks(user_id = 23){
+    let url = 'http://127.0.0.1:8000/get_task_by_user/'+String(user_id)
+    let response = await fetch(url)
+    if (response.ok){
+        let t = await response.json()
+        console.log(t)
+        Tasks.set(t)
+        console.log('Tasks Fetched')
+    }
+}
+
+
+export async function addTaskToApi(userId = 23, task= {...taskModel, id:assignId()}){
+    let url = 'http://127.0.0.1:8000/task_manager'
+    let data = {
+        user_id  : userId,
+        task: task,
+        event: 'create'    
+    }
+    let response = await fetch(url, {
+        method : 'POST',
+        headers : {
+            'Content-Type' : 'application/json'
+        },
+        body :JSON.stringify(data)
+    })
+
+    if (response.ok){
+        let t = await response.json()
+        console.log(t)
+        Tasks.set(t.Tasks)
+        console.log(t)
+        return t.task
+    }else{
+        throw new Error('This task couldnt be loaded unto existing task!')
+    }
+}
+
 
 function checkAndNotify(task){
     let deadlineMet = false
@@ -138,10 +164,10 @@ const assignId = () => {
     return genId;
 }
 
-export const addTask = () => {
+export async function addTask(userId) {
     let newTask = {...taskModel, id:assignId()}
-    Tasks.update(arr => [newTask, ...arr]);
+    console.log('newTask', newTask)
+    newTask = await addTaskToApi(userId, newTask)
     let n = NotificationHandler(newTask)
     return newTask
-    }
-
+}

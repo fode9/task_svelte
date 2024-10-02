@@ -1,11 +1,13 @@
 <script>
-	import { pageInfo, Tasks, addTask, notificationsMsg} from './store.js';
+	import { pageInfo, Tasks, addTask, notificationsMsg, addTaskToApi, userId } from './store.js';
     import Notification from './components/notification.svelte';
+    import { onMount } from 'svelte';
 
-    function handleAdd(){
-        //Add a new task
-        let newTask = addTask()
-        $pageInfo.page = 'modifyPage'
+
+
+    async function handleAdd(){
+        await addTask($userId)
+        $pageInfo.page = 'addPage'
         $pageInfo.detail = 0
         console.log($pageInfo.detail)
     }
@@ -16,7 +18,7 @@
         <div class="px-5 frame3 d-flex flex-row justify-content-between">
             <i class=" fa fa-bars h1 my-auto text-primary" ></i>
             <div class="frame4 d-flex flex-row">
-                <p on:click={handleAdd} class=" text-decoration-none m-3 clickable menu-links">+ Add</p>
+                <p on:click={handleAdd} class=" text-decoration-none m-3 clickable menu-links" >+ Add</p>
                 <p class=" text-decoration-none m-3 clickable menu-links">Modify</p>
                 <p class=" text-decoration-none m-3 clickable menu-links">View</p>
             </div>
