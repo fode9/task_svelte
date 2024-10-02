@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy} from 'svelte';
-	import { notifications, notificationsMsg } from './../store.js';
+	import { notifications, notificationsMsg, updateTask, userId } from './../store.js';
     import { fade, slide, fly, scale, blur, draw, crossfade } from 'svelte/transition';
 
     function handleNotifClose(task){
@@ -30,6 +30,7 @@
 
     function handleTaskCompleted(task){
         task.notify = false
+        updateTask(task, $userId)
         const icon = document.getElementById(String(task.id))
         if (task.notify === false){
             icon.className = 'fa fa-bell text-dark h4'

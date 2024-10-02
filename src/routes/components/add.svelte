@@ -2,7 +2,7 @@
     import { fade, slide, fly, scale, blur, draw, crossfade } from 'svelte/transition';
     import Scripts from './scripts.svelte';
     import {createEventDispatcher, onMount} from 'svelte'
-    import { addTask, Tasks, userId } from '../store';
+    import { addTask, getTasks, Tasks, updateTask, userId } from '../store';
     export let taskId = 0
     console.log('addPage')
 
@@ -35,23 +35,8 @@
 
     async function handleSubmit(){
         task.day = dayOfWeek
-        let data = {
-            user_id  : $userId,
-            task: task,
-            event: 'direct_update'    
-        }
-        let response = await fetch(url, {
-            method : 'POST',
-            headers : {
-                "Content-Type": 'application/json'
-            },
-
-            body: JSON.stringify(data)
-        } )
-
-        if (response.ok){
-            console.log("Task Updated")
-        }
+        updateTask(task,$userId)
+        getTasks($userId)
         handleClickBackdrop()
     }
     function handleClickBackdrop(){

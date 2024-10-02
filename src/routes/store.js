@@ -63,6 +63,11 @@ export async function getTasks(user_id = 23){
         let t = await response.json()
         console.log(t)
         Tasks.set(t)
+        Tasks.subscribe(list => {
+            for (let i=0;i<list.length; i++){
+                let n = NotificationHandler(list[i])
+            }
+        })
         console.log('Tasks Fetched')
     }
 }
@@ -88,8 +93,11 @@ export async function addTaskToApi(userId = 23, task= {...taskModel, id:assignId
         console.log(t)
         Tasks.set(t.Tasks)
         console.log(t)
-        return t.task
-    }else{
+        Tasks.subscribe(list => {
+            t = list[0]
+        })
+        return t
+        }else{
         throw new Error('This task couldnt be loaded unto existing task!')
     }
 }
@@ -164,10 +172,33 @@ const assignId = () => {
     return genId;
 }
 
-export async function addTask(userId) {
+export async function addTask(userid) {
     let newTask = {...taskModel, id:assignId()}
     console.log('newTask', newTask)
-    newTask = await addTaskToApi(userId, newTask)
+    newTask = await addTaskToApi(userid, newTask)
+    userId.subscribe(value => {getTasks(value)})
     let n = NotificationHandler(newTask)
+    console.log('Added')
     return newTask
+}
+
+export async function updateTask(task={},userid=0) {
+    let url = 'http://127.0.0.1:8000/task_manager'
+    let data = {
+        user_id  : userid,
+        task: task,
+        event: 'direct_update'    
+    }
+    let response = await fetch(url, {
+        method : 'POST',
+        headers : {
+            "Content-Type": 'application/json'
+        },
+
+        body: JSON.stringify(data)
+    } )
+
+    if (response.ok){
+        console.log("Task Updated")
+    }
 }

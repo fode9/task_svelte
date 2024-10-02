@@ -5,7 +5,7 @@
     import Layout from "./+layout.svelte";
 	import Modify from "./components/modify.svelte";
     import Add from './components/add.svelte';
-    import {Tasks, pageInfo, requestNotificationPermission, getTasks, userId} from './store'
+    import {Tasks, pageInfo, requestNotificationPermission, getTasks, userId, updateTask} from './store'
     import {addTask} from './store'
     import { fade, slide, fly, scale, blur, draw, crossfade } from 'svelte/transition';
 
@@ -26,8 +26,10 @@
     })
     
 
-    function handleNotify(task){
-        task.notify = !task.notify 
+    async function handleNotify(task){
+        task.notify = !task.notify
+        updateTask(task,$userId)
+        getTasks($userId)
         let ico = document.getElementById(String(task.id))
         if (task.notify === true){
             ico.className = 'fa fa-bell fa-shake text-primary h4'
@@ -49,9 +51,25 @@
 
     }
 
-    const deleteTask = (task) => {
-    $Tasks = $Tasks.filter(item => item !== task)
-}
+    async function deleteTask(task){
+        let url = 'http://127.0.0.1:8000/task_manager'
+        let data = {
+            user_id  : $userId,
+            task: task,
+            event: 'delete_task'    
+        }
+        let response = await fetch(url, {
+            method : "POST",
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify(data)
+        })
+        if  (response.ok){
+            console.log('Delete Successful')
+            getTasks($userId)
+        }
+    }
 
 </script>
 

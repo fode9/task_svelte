@@ -1,5 +1,5 @@
 <script>
-	import { pageInfo, Tasks, addTask, notificationsMsg, addTaskToApi, userId } from './store.js';
+	import { pageInfo, Tasks, addTask, notificationsMsg, addTaskToApi, userId, getTasks } from './store.js';
     import Notification from './components/notification.svelte';
     import { onMount } from 'svelte';
 
@@ -7,6 +7,7 @@
 
     async function handleAdd(){
         await addTask($userId)
+        getTasks($userId)
         $pageInfo.page = 'addPage'
         $pageInfo.detail = 0
         console.log($pageInfo.detail)

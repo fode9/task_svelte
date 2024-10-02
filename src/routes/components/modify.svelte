@@ -2,7 +2,7 @@
     import { fade, slide, fly, scale, blur, draw, crossfade } from 'svelte/transition';
     import Scripts from './scripts.svelte';
     import {createEventDispatcher, onMount} from 'svelte'
-    import { addTask, Tasks, userId } from '../store';
+    import { addTask, Tasks, userId, getTasks, updateTask } from '../store';
     export let taskId = 0
 
     let url = 'http://127.0.0.1:8000/task_manager'
@@ -33,23 +33,8 @@
 
     async function handleSubmit(){
         task.day = dayOfWeek
-        let data = {
-            user_id  : $userId,
-            task: task,
-            event: 'direct_update'    
-        }
-        let response = await fetch(url, {
-            method : 'POST',
-            headers : {
-                "Content-Type": 'application/json'
-            },
-
-            body: JSON.stringify(data)
-        } )
-
-        if (response.ok){
-            console.log("Task Updated")
-        }
+        updateTask(task, $userId)
+        getTasks($userId)
         handleClickBackdrop()
     }
     function handleClickBackdrop(){
@@ -61,7 +46,7 @@
 
 
     function handleNotify(){
-        task.notify = !task.notify 
+        task.notify = !task.notify
         let ico = document.getElementById(String(task.id))
         if (task.notify === true){
             className = 'fa fa-bell fa-shake text-primary h4'
