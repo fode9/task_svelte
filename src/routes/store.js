@@ -34,7 +34,8 @@ const taskModel = {
     name: 'Today',
     created: new Date().toISOString(),
     note: '',
-    notify: false
+    notify: false,
+    notifObject : {}
 
 }
 
@@ -64,8 +65,12 @@ export async function getTasks(user_id = String(23)){
         console.log(t)
         Tasks.set(t)
         Tasks.subscribe(list => {
+            //LOOOPS THROUGH ALL TASK
             for (let task of list){
-                NotificationHandler(task)
+                task.notifObject = new Notificationclass(task)
+                if (task.notify){
+                    task.notifObject.startNotif()
+                }
             }
         })
         console.log('Tasks Fetched')
@@ -129,23 +134,6 @@ function checkAndNotify(task){
 
 }
 
-async function NotificationHandler(task) {
-    console.log('Notification Hnadle')
-    let interval = setInterval(() => {
-        if (notifications.includes(task) && !task.notify){
-            notifications.filter(item => item !== task)
-            clearInterval(interval)
-        }
-        let nlist =[]
-        notificationsMsg.subscribe(value => {nlist = value} )
-        if (!notifications.includes(task) && task.notify && !nlist.includes(task) ){
-            notifications = [...notifications, {task}]
-            let check = checkAndNotify(task)
-        }
-    }, 10000);
-    
-
-}
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -177,21 +165,41 @@ export async function addTask(userid) {
     console.log('newTask', newTask)
     newTask = await addTaskToApi(userid, newTask)
     userId.subscribe(value => {getTasks(value)})
-    getNotification(userid)
-    let n = NotificationHandler(newTask)
     console.log('Added')
     return newTask
 }
 
-async function getNotification(user_id){
-    let response = await fetch('http://127.0.0.1:8000/get_notification/'+user_id)
-    if (response.ok){
-        notifications = await response.json()
+
+
+async class Notificationclass{
+    constructor(task){
+        this.task = task
+        console.log(`Task ${this.task.id} notification check is initialized! `)
     }
+
+    startNotif(){
+        console.log('Notification Hnadle')
+        let nlist =[]
+        notificationsMsg.subscribe(value => {nlist = value} )
+        this.interval = setInterval(() => {
+            if (notifications.includes(this.task) && !this.task.notify){
+                notifications.filter(item => item !== this.task)
+                clearInterval(this.interval)
+            }
+            else if (!notifications.includes(this.task) && this.task.notify && !nlist.includes(this.task) ){
+                notifications = [...notifications, {this.task}]
+                let check = checkAndNotify(this.task)
+            }
+        }, 10000);
+    }
+
+    clearNotif(){
+        clearInterval(this.interval)
+    }
+
 }
 
 export async function updateTask(task={},userid=0) {
-    getNotification(userid)
     let url = 'http://127.0.0.1:8000/task_manager'
     let data = {
         user_id  : userid,
