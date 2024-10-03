@@ -40,7 +40,7 @@ const taskModel = {
 
 export let notifications = []
 
-export let userId = writable(23)
+export let userId = writable(String(23))
 
 export let notificationsMsg = writable([])
 
@@ -56,16 +56,16 @@ function convertToTimeZone(date, timeZoneOffsetMinutes) {
   }
 
 
-export async function getTasks(user_id = 23){
-    let url = 'http://127.0.0.1:8000/get_task_by_user/'+String(user_id)
+export async function getTasks(user_id = String(23)){
+    let url = 'http://127.0.0.1:8000/get_task_by_user/'+user_id
     let response = await fetch(url)
     if (response.ok){
         let t = await response.json()
         console.log(t)
         Tasks.set(t)
         Tasks.subscribe(list => {
-            for (let i=0;i<list.length; i++){
-                let n = NotificationHandler(list[i])
+            for (let task of list){
+                NotificationHandler(task)
             }
         })
         console.log('Tasks Fetched')
@@ -73,7 +73,7 @@ export async function getTasks(user_id = 23){
 }
 
 
-export async function addTaskToApi(userId = 23, task= {...taskModel, id:assignId()}){
+export async function addTaskToApi(userId = String(23), task= {...taskModel, id:assignId()}){
     let url = 'http://127.0.0.1:8000/task_manager'
     let data = {
         user_id  : userId,
@@ -177,12 +177,21 @@ export async function addTask(userid) {
     console.log('newTask', newTask)
     newTask = await addTaskToApi(userid, newTask)
     userId.subscribe(value => {getTasks(value)})
+    getNotification(userid)
     let n = NotificationHandler(newTask)
     console.log('Added')
     return newTask
 }
 
+async function getNotification(user_id){
+    let response = await fetch('http://127.0.0.1:8000/get_notification/'+user_id)
+    if (response.ok){
+        notifications = await response.json()
+    }
+}
+
 export async function updateTask(task={},userid=0) {
+    getNotification(userid)
     let url = 'http://127.0.0.1:8000/task_manager'
     let data = {
         user_id  : userid,
