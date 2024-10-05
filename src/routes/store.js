@@ -41,7 +41,7 @@ const taskModel = {
 
 export let notifications = []
 
-export let userId = writable(String(23))
+export let userId = writable('')
 
 export let notificationsMsg = writable([])
 
@@ -64,15 +64,18 @@ export async function getTasks(user_id = String(23)){
         let t = await response.json()
         console.log(t)
         Tasks.set(t)
+        let temp;
         Tasks.subscribe(list => {
             //LOOOPS THROUGH ALL TASK
-            for (let task of list){
-                task.notifObject = new Notificationclass(task)
-                if (task.notify){
-                    task.notifObject.startNotif()
-                }
-            }
+            temp = list
         })
+        if (temp.length > 0){for (let task of temp){
+            task.notifObject = new Notificationclass(task)
+            
+            if (task.notify){
+                task.notifObject.startNotif()
+            }
+        }}
         console.log('Tasks Fetched')
     }
 }
@@ -164,20 +167,20 @@ export async function addTask(userid) {
     let newTask = {...taskModel, id:assignId()}
     console.log('newTask', newTask)
     newTask = await addTaskToApi(userid, newTask)
-    userId.subscribe(value => {getTasks(value)})
+    getTasks(userid)
     console.log('Added')
     return newTask
 }
 
 
 
-async class Notificationclass{
+class Notificationclass{
     constructor(task){
         this.task = task
         console.log(`Task ${this.task.id} notification check is initialized! `)
     }
 
-    startNotif(){
+    async startNotif(){
         console.log('Notification Hnadle')
         let nlist =[]
         notificationsMsg.subscribe(value => {nlist = value} )
@@ -187,7 +190,7 @@ async class Notificationclass{
                 clearInterval(this.interval)
             }
             else if (!notifications.includes(this.task) && this.task.notify && !nlist.includes(this.task) ){
-                notifications = [...notifications, {this.task}]
+                notifications = [...notifications, this.task]
                 let check = checkAndNotify(this.task)
             }
         }, 10000);

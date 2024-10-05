@@ -33,6 +33,7 @@
 
     async function handleSubmit(){
         task.day = dayOfWeek
+        task.notifObject = {}
         updateTask(task, $userId)
         getTasks($userId)
         handleClickBackdrop()

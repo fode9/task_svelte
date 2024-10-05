@@ -30,6 +30,7 @@
 
     function handleTaskCompleted(task){
         task.notify = false
+        task.notifObject = {}
         updateTask(task, $userId)
         const icon = document.getElementById(String(task.id))
         if (task.notify === false){

@@ -28,6 +28,7 @@
 
     async function handleNotify(task){
         task.notify = !task.notify
+        task.notifObject = {}
         updateTask(task,$userId)
         getTasks($userId)
         let ico = document.getElementById(String(task.id))
@@ -53,6 +54,7 @@
 
     async function deleteTask(task){
         let url = 'http://127.0.0.1:8000/task_manager'
+        task.notifObject = {}
         let data = {
             user_id  : $userId,
             task: task,
