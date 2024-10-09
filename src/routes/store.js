@@ -57,7 +57,7 @@ function convertToTimeZone(date, timeZoneOffsetMinutes) {
   }
 
 
-export async function getTasks(user_id = String(23)){
+export async function getTasks(user_id = ''){
     let url = 'http://127.0.0.1:8000/get_task_by_user/'+user_id
     let response = await fetch(url)
     if (response.ok){
@@ -202,7 +202,7 @@ class Notificationclass{
 
 }
 
-export async function updateTask(task={},userid=0) {
+export async function updateTask(task={},userid='') {
     let url = 'http://127.0.0.1:8000/task_manager'
     let data = {
         user_id  : userid,

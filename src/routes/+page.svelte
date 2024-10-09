@@ -33,6 +33,7 @@
         getTasks($userId)
         let ico = document.getElementById(String(task.id))
         if (task.notify === true){
+            task.notifObject.startNotif()
             ico.className = 'fa fa-bell fa-shake text-primary h4'
         }else{
             ico.className = 'fa fa-bell text-dark h4'
