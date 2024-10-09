@@ -1,0 +1,79 @@
+{
+    "23": [
+        {
+            "id": 82,
+            "day": "Friday",
+            "date": "2024-11-22T03:05",
+            "name": "Convention",
+            "created": "2024-10-03T20:55:02.087Z",
+            "note": "Convention",
+            "notify": false,
+            "notifObject": {}
+        },
+        {
+            "id": 774,
+            "day": "Saturday",
+            "date": "2024-10-05T12:12",
+            "name": "Today",
+            "created": "2024-10-03T20:49:00.976Z",
+            "note": "",
+            "notify": true,
+            "notifObject": {}
+        },
+        {
+            "id": 515,
+            "day": "Saturday",
+            "date": "2024-10-05T11:57",
+            "name": "Today",
+            "created": "2024-10-03T20:45:03.625Z",
+            "note": "",
+            "notify": false,
+            "notifObject": {}
+        }
+    ],
+    "14": [
+        {
+            "id": 616,
+            "day": "Thursday",
+            "date": "2024-09-26",
+            "name": "Today",
+            "created": "2024-10-05T01:19:43.276Z",
+            "note": "",
+            "notify": true,
+            "notifObject": {}
+        }
+    ],
+    "444269": [
+        {
+            "id": 143,
+            "day": "Day",
+            "date": "2024-09-26",
+            "name": "Today",
+            "created": "2024-10-04T17:27:19.779Z",
+            "note": "",
+            "notify": false,
+            "notifObject": {}
+        }
+    ],
+    "806776": [],
+    "548282": [],
+    "759231": [],
+    "482848": [
+        {
+            "id": 15,
+            "day": "Monday",
+            "date": "2024-10-28T18:41",
+            "name": "Today",
+            "created": "2024-10-04T17:41:24.333Z",
+            "note": "",
+            "notify": true,
+            "notifObject": {}
+        }
+    ],
+    "738421": [],
+    "565929": [],
+    "754336": [],
+    "551984": [],
+    "193479": [],
+    "921435": []
+}
